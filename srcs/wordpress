@@ -4,7 +4,18 @@ server {
 
 		server_name _;
 
-		return 301 https://localhost$request_uri;
+		root /var/www/html;
+
+		index index.php;
+
+		location / {
+			autoindex on;
+		}
+
+		location ~ \.php$ {
+			include snippets/fastcgi-php.conf;
+			fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+		}
 }
 
 server {
@@ -17,9 +28,13 @@ server {
         ssl_certificate /etc/nginx/ssl/wordpress.pem;
         ssl_certificate_key /etc/nginx/ssl/wordpress.key;
 
-		root /var/www/wordpress;
+		root /var/www/html;
 
 		index index.php;
+
+		location / {
+			autoindex on;
+		}
 
 		location ~ \.php$ {
 			include snippets/fastcgi-php.conf;
